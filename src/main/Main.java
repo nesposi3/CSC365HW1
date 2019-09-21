@@ -20,16 +20,22 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 public class Main extends Application {
     public static void handleUrl(String url) throws IOException, MalformedURLException {
-        Document doc = Jsoup.connect(url).get();
-        String text = doc.outerHtml();
         int fileName = url.hashCode();
         File dir = new File("cache");
         dir.mkdir();
         File f = new File("cache/" + fileName + ".html");
-        f.createNewFile();
-        BufferedWriter writer = new BufferedWriter(new FileWriter(f));
-        writer.write(text);
-        writer.close();
+        if(!f.createNewFile()){
+            //file exists, retrieve from storage
+            Document localDoc = Jsoup.parse(f,"UTF-8","");
+        }else{
+            //file doesn't exist, download
+            Document doc = Jsoup.connect(url).get();
+            String text = doc.outerHtml();
+            BufferedWriter writer = new BufferedWriter(new FileWriter(f));
+            writer.write(text);
+            writer.close();
+        }
+
     }
     public static void main(String[] args) {
         launch(args);
