@@ -18,15 +18,39 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class Main extends Application {
-    public static void handleUrl(String url) throws IOException, MalformedURLException {
+    public static Document handleUrl(String url) throws IOException, MalformedURLException, ParseException {
         int fileName = url.hashCode();
         File dir = new File("cache");
         dir.mkdir();
         File f = new File("cache/" + fileName + ".html");
         if(!f.createNewFile()){
-            //file exists, retrieve from storage
-            Document localDoc = Jsoup.parse(f,"UTF-8","");
+            //file exists, check when local file last modified
+            long localMod = f.lastModified();
+            // Check when website was last modified
+            Connection.Response conn = Jsoup.connect(url).execute();
+            String dString = conn.header("Last-Modified");
+            // Pattern based on format of HTTP last modified header
+            SimpleDateFormat format = new SimpleDateFormat("EEE',' dd MMM YYYY HH':'mm':'ss zz");
+            Date date = format.parse(dString);
+            long webMod = date.getTime();
+            // If website modified after local, get page again
+            if (webMod>localMod){
+                f.delete();
+                f.createNewFile();
+                Document doc = Jsoup.connect(url).get();
+                String text = doc.outerHtml();
+                BufferedWriter writer = new BufferedWriter(new FileWriter(f));
+                writer.write(text);
+                writer.close();
+                return doc;
+            }else{
+                return Jsoup.parse(f,"UTF-8","");
+            }
         }else{
             //file doesn't exist, download
             Document doc = Jsoup.connect(url).get();
@@ -34,6 +58,7 @@ public class Main extends Application {
             BufferedWriter writer = new BufferedWriter(new FileWriter(f));
             writer.write(text);
             writer.close();
+            return doc;
         }
 
     }
@@ -55,9 +80,12 @@ public class Main extends Application {
                 String url = urlField.getText();
                 try{
                     handleUrl(url);
-
                 }catch (IOException ioe){
+                    ioe.printStackTrace();
 
+                }
+                catch (ParseException p){
+                    p.printStackTrace();
                 }
             }
         });
