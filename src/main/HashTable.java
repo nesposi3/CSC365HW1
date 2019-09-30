@@ -93,16 +93,4 @@ public class HashTable {
         this.arr = new Node[INITIAL_SIZE];
         this.numKeys = 0;
     }
-    public static void main(String[] args){
-        HashTable table = new HashTable();
-        table.add("hello");
-        table.add("howdy");
-        System.out.println(table.arr.length);
-        table.add("aewe");
-        table.add("dwewqedsad");
-        table.add("dnjnjknjk");
-        table.add("meow");
-        System.out.println(table.arr.length);
-        table.printAll();
-    }
 }
