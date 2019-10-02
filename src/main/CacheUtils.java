@@ -34,7 +34,7 @@ public class CacheUtils {
                     Matcher m = urlPattern.matcher(link);
                     if(m.matches()){
                         String flink = BASE_URI + (e.attr("href"));
-                        System.out.println(flink);
+                        //System.out.println(flink);
                     }
                 }
 
@@ -80,5 +80,15 @@ public class CacheUtils {
             return doc;
         }
 
+    }
+    public static HashTable getWordsTable(Document doc){
+        HashTable table = new HashTable();
+        String content = doc.text();
+        String delimiters ="[ .!?@\\[\\]/()\\-—,\"\']";
+        String[] words = content.split(delimiters);
+        for (int i = 0; i <words.length ; i++) {
+            table.add(words[i]);
+        }
+        return table;
     }
 }

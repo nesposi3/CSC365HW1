@@ -35,6 +35,8 @@ public class HashTable {
     }
 
     private void resize() {
+        System.out.println("resizing");
+        System.out.println(arr.length);
         int newArrSize = arr.length * 2;
         Node[] newArr = new Node[newArrSize];
         for (int i = 0; i < arr.length; i++) {
@@ -42,7 +44,7 @@ public class HashTable {
             while (n != null) {
                 int h = n.hashCode;
                 int newIndex = h & (newArrSize - 1);
-                if (newArr[newIndex] != null) {
+                if (newArr[newIndex] != null && !newArr[newIndex].key.equals(n.key)) {
                     newArr[newIndex].next = n;
                 } else {
                     newArr[newIndex] = n;
@@ -107,5 +109,16 @@ public class HashTable {
     public HashTable() {
         this.arr = new Node[INITIAL_SIZE];
         this.numKeys = 0;
+    }
+    public int size(){
+        int j = 0;
+        for (int i = 0; i <arr.length ; i++) {
+            Node n = arr[i];
+            while (n!=null){
+                j++;
+                n = n.next;
+            }
+        }
+        return j;
     }
 }

@@ -10,8 +10,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import org.jsoup.nodes.Document;
+
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.Hashtable;
 
 
 public class Main extends Application {
@@ -22,7 +25,13 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        try{
+            CacheUtils.initialize();
+        }catch (IOException e){
 
+        }catch (ParseException e){
+
+        }
         primaryStage.setTitle("Hello World!");
         Button btn = new Button();
         Button initialize = new Button("Initialize");
@@ -35,7 +44,9 @@ public class Main extends Application {
             public void handle(ActionEvent event) {
                 String url = urlField.getText();
                 try{
-                    CacheUtils.handleUrl(url);
+                    Document doc = CacheUtils.handleUrl(url);
+                    HashTable table = CacheUtils.getWordsTable(doc);
+                    table.printAll();
                 }catch (IOException ioe){
                     ioe.printStackTrace();
 
