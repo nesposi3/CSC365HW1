@@ -35,8 +35,6 @@ public class HashTable {
     }
 
     private void resize() {
-        System.out.println("resizing");
-        System.out.println(arr.length);
         int newArrSize = arr.length * 2;
         Node[] newArr = new Node[newArrSize];
         for (int i = 0; i < arr.length; i++) {
