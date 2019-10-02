@@ -54,7 +54,7 @@ public class Main extends Application {
                     Document doc = CacheUtils.handleUrl(url);
                     HashTable table = CacheUtils.getWordsTable(doc);
                     String closestString = SimilarityUtils.similarity(table,cachedTables);
-                    closest.setText("The closest website to " + table.getName() + " is: " + closestString);
+                    closest.setText("The closest wikipedia article to " + table.getName() + " is: " + closestString);
                 }catch (IOException ioe){
                     ioe.printStackTrace();
 
