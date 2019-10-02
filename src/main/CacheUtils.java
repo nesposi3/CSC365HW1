@@ -20,10 +20,22 @@ import java.util.regex.Pattern;
 
 public class CacheUtils {
     public final static String BASE_URI = "https://en.wikipedia.org";
+
+    /**
+     * Removes special characters from the input string
+     * @param url The string to be transformed
+     * @return
+     */
     public static String generateFileName(String url){
         String removePunctPattern = "[\\.\\/:]";
         return url.replaceAll(removePunctPattern,"");
     }
+
+    /**
+     * Goes through control file and adds files to cache based on links from those files
+     * @throws IOException
+     * @throws ParseException
+     */
     public static void initialize() throws IOException, ParseException {
         File links = new File("links.txt");
         Scanner file = new Scanner(links);
@@ -47,6 +59,15 @@ public class CacheUtils {
             }
         }
     }
+
+    /**
+     * Takes in a url, creates and stores an html file from the url
+     * Checks when files stored in cache were last updated, if later than web, redownload
+     * @param url The url for the website to be downloaded
+     * @return The jsoup Document created by the method
+     * @throws IOException
+     * @throws ParseException
+     */
     public static Document handleUrl(String url) throws IOException, ParseException {
         String fileName = generateFileName(url);
         File dir = new File("cache");
@@ -86,6 +107,12 @@ public class CacheUtils {
         }
 
     }
+
+    /**
+     * Takes in a jsoup document and returns a HashTable with words and word frequencies
+     * @param doc The jsoup document to be analyzed
+     * @return A HashTable
+     */
     public static HashTable getWordsTable(Document doc){
         HashTable table = new HashTable(doc.title());
         String content = doc.text();
@@ -96,6 +123,11 @@ public class CacheUtils {
         }
         return table;
     }
+
+    /**
+     * Transforms all cached files into HashTables
+     * @return A list of HashTables representing word frequencies of all cached documents
+     */
     public static HashTable[] getAllCachedTables(){
         File cacheFolder = new File("cache/");
         File[] files = cacheFolder.listFiles();

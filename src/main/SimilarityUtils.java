@@ -8,6 +8,13 @@ import main.HashTable.*;
 public class SimilarityUtils {
     //The hashtable for the entered url is an n-dimensional vector that we apply tf-idf to, and cosine simiarity
     // We must go through each word on each document and apply these functions
+
+    /**
+     * TF Algorithm gives us word frequency in a document
+     * @param key The word to check frequency, String
+     * @param doc The document with which to check, Represented by a HashTable
+     * @return The frequency of key
+     */
     private static double TF(String key,HashTable doc){
         HashTable.Node n = doc.get(key);
         if(n!=null){
@@ -18,6 +25,13 @@ public class SimilarityUtils {
             return 0;
         }
     }
+
+    /**
+     * IDF Algorithm helps determine how rare a word is in a corpus, with more rarity yielding a higher value
+     * @param key The word to check, a String
+     * @param docList The corpus, represented as an array of HashTables
+     * @return
+     */
     private static double IDF(String key, HashTable[] docList){
         int numWithKey = 0;
         for (int i = 0; i <docList.length ; i++) {
@@ -35,12 +49,13 @@ public class SimilarityUtils {
     }
 
     /**
-     * This method produces the most similar document to the one input by the user
-     * @param enteredDoc The HashTable to be compared to
-     * @param cachedDocs The HashTables that the cache has stored
+     * This method produces the most similar document of a corpus to the entered document
+     * Uses TF and IDF
+     * @param enteredDoc The Document that is being compared to, a  HashTable
+     * @param cachedDocs The Corpus with which to check
      * @return A string with the title of the most similar webpage
      */
-    public static String similarity(HashTable enteredDoc, HashTable[] cachedDocs){
+    public static String findMostSimilar(HashTable enteredDoc, HashTable[] cachedDocs){
         //This hashmap stores tf-idf vectors for each word in the entered document
         HashMap<String, Double[]> cachedDocumentVectors = new HashMap<String, Double[]>();
         //This hashmap represents the tfidf vector of the query
