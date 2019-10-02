@@ -23,6 +23,7 @@ public class CacheUtils {
     public static void initialize() throws IOException, ParseException {
         File links = new File("links.txt");
         Scanner file = new Scanner(links);
+        //This pattern excludes all files, special wikipedia pages, and disambiguation pages
         Pattern urlPattern = Pattern.compile("\\/wiki\\/((?!((Wikipedia:)|(File:))).)*(?<!(_\\(disambiguation\\)))");
         while (file.hasNextLine()){
             Document doc = (handleUrl(file.nextLine()));
@@ -82,7 +83,7 @@ public class CacheUtils {
 
     }
     public static HashTable getWordsTable(Document doc){
-        HashTable table = new HashTable();
+        HashTable table = new HashTable(doc.title());
         String content = doc.text();
         String delimiters ="[ .!?@\\[\\]/()\\-—,\"\']";
         String[] words = content.split(delimiters);
@@ -90,5 +91,19 @@ public class CacheUtils {
             table.add(words[i]);
         }
         return table;
+    }
+    public static HashTable[] getAllCachedTables(){
+        File cacheFolder = new File("cache/");
+        File[] files = cacheFolder.listFiles();
+        HashTable[] out = new HashTable[files.length];
+        try{
+            for (int i = 0; i <files.length ; i++) {
+                Document doc = Jsoup.parse(files[i],"UTF-8","");
+                out[i] = getWordsTable(doc);
+            }
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        return out;
     }
 }

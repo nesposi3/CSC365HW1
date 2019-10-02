@@ -9,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.jsoup.nodes.Document;
 
@@ -35,7 +36,8 @@ public class Main extends Application {
         primaryStage.setTitle("Website Similarity");
         Button btn = new Button();
         TextField urlField = new TextField();
-        Label label = new Label("Enter URL:");
+        Text closest = new Text();
+        closest.setText("Enter a wikipedia url to determine its similarity to the cached files!");
         btn.setText("Enter");
         btn.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -43,8 +45,11 @@ public class Main extends Application {
             public void handle(ActionEvent event) {
                 String url = urlField.getText();
                 try{
+                    HashTable[] cachedTables = CacheUtils.getAllCachedTables();
                     Document doc = CacheUtils.handleUrl(url);
                     HashTable table = CacheUtils.getWordsTable(doc);
+                    String closestString = SimilarityUtils.similarity(table,cachedTables);
+                    closest.setText("The closest website to " + table.getName() + " is: " + closestString);
                 }catch (IOException ioe){
                     ioe.printStackTrace();
 
@@ -57,7 +62,8 @@ public class Main extends Application {
         GridPane root = new GridPane();
         GridPane.setConstraints(btn,1,0);
         GridPane.setConstraints(urlField,0,0);
-        root.getChildren().addAll(btn,urlField);
+        GridPane.setConstraints(closest,2,4);
+        root.getChildren().addAll(btn,urlField,closest);
         primaryStage.setScene(new Scene(root, 600, 500));
         primaryStage.show();
     }

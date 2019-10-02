@@ -1,5 +1,7 @@
 package main;
 
+import java.util.function.Consumer;
+
 public class HashTable {
     public static final double RESIZE_RATIO = .75;
     public static final int INITIAL_SIZE = 1024;
@@ -17,7 +19,7 @@ public class HashTable {
         public int hashCode;
         public Node next;
     }
-
+    private String name;
     private int numKeys;
     private Node[] arr;
 
@@ -53,7 +55,7 @@ public class HashTable {
         this.arr = newArr;
     }
 
-    public boolean keyExists(String key) {
+    public boolean contains(String key) {
         int h = key.hashCode();
         int index = h & ((arr.length) - 1);
         Node n = arr[index];
@@ -104,10 +106,16 @@ public class HashTable {
         }
     }
 
-    public HashTable() {
+    public HashTable(String name) {
         this.arr = new Node[INITIAL_SIZE];
         this.numKeys = 0;
+        this.name = name;
     }
+
+    /**
+     * This is the number of nodes the hashmap has
+     * @return
+     */
     public int size(){
         int j = 0;
         for (int i = 0; i <arr.length ; i++) {
@@ -118,5 +126,38 @@ public class HashTable {
             }
         }
         return j;
+    }
+
+    /**
+     * This measures how many total words were in a document, takes into account word frequency in nodes
+     * @return
+     */
+    public int totalWordCount(){
+        int j = 0;
+        for (int i = 0; i <arr.length ; i++) {
+            Node n = arr[i];
+            while (n!=null){
+                j += n.wordFrequency;
+                n = n.next;
+            }
+        }
+        return j;
+    }
+
+    /**
+     * Iterates over whole hashtable
+     * @param consumer A lambda expression to apply to each node
+     */
+    public void forEach(Consumer<Node> consumer){
+        for (int i = 0; i < arr.length; i++) {
+            Node n = arr[i];
+            while (n != null) {
+                consumer.accept(n);
+                n = n.next;
+            }
+        }
+    }
+    public String getName(){
+        return name;
     }
 }
