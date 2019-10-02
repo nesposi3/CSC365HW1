@@ -74,10 +74,8 @@ public class SimilarityUtils {
                 cachedBottom += cachedTFIDF * cachedTFIDF;
                 double dotProductPart = tfidfQuery * cachedTFIDF;
                 top += dotProductPart;
-
             }
             double bottom = Math.sqrt(queryBottom) + Math.sqrt(cachedBottom);
-            //System.out.println(top + " / " + bottom);
             double similarity = top/bottom;
             if(similarity>maxSimilarity){
                 maxSimilarity = similarity;

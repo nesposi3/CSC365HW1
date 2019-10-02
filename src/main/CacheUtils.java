@@ -20,6 +20,10 @@ import java.util.regex.Pattern;
 
 public class CacheUtils {
     public final static String BASE_URI = "https://en.wikipedia.org";
+    public static String generateFileName(String url){
+        String removePunctPattern = "[\\.\\/:]";
+        return url.replaceAll(removePunctPattern,"");
+    }
     public static void initialize() throws IOException, ParseException {
         File links = new File("links.txt");
         Scanner file = new Scanner(links);
@@ -44,7 +48,7 @@ public class CacheUtils {
         }
     }
     public static Document handleUrl(String url) throws IOException, ParseException {
-        int fileName = url.hashCode();
+        String fileName = generateFileName(url);
         File dir = new File("cache");
         dir.mkdir();
         File f = new File("cache/" + fileName + ".html");
