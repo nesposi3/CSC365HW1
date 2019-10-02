@@ -32,9 +32,8 @@ public class Main extends Application {
         }catch (ParseException e){
 
         }
-        primaryStage.setTitle("Hello World!");
+        primaryStage.setTitle("Website Similarity");
         Button btn = new Button();
-        Button initialize = new Button("Initialize");
         TextField urlField = new TextField();
         Label label = new Label("Enter URL:");
         btn.setText("Enter");
@@ -46,21 +45,6 @@ public class Main extends Application {
                 try{
                     Document doc = CacheUtils.handleUrl(url);
                     HashTable table = CacheUtils.getWordsTable(doc);
-                    table.printAll();
-                }catch (IOException ioe){
-                    ioe.printStackTrace();
-
-                }
-                catch (ParseException p){
-                    p.printStackTrace();
-                }
-            }
-        });
-        initialize.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                try{
-                    CacheUtils.initialize();
                 }catch (IOException ioe){
                     ioe.printStackTrace();
 
@@ -73,8 +57,7 @@ public class Main extends Application {
         GridPane root = new GridPane();
         GridPane.setConstraints(btn,1,0);
         GridPane.setConstraints(urlField,0,0);
-        GridPane.setConstraints(initialize,0,2);
-        root.getChildren().addAll(btn,urlField,initialize);
+        root.getChildren().addAll(btn,urlField);
         primaryStage.setScene(new Scene(root, 600, 500));
         primaryStage.show();
     }

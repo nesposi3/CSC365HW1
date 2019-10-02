@@ -23,22 +23,22 @@ public class CacheUtils {
     public static void initialize() throws IOException, ParseException {
         File links = new File("links.txt");
         Scanner file = new Scanner(links);
-        Pattern urlPattern = Pattern.compile("\\/wiki\\/.*");
+        Pattern urlPattern = Pattern.compile("\\/wiki\\/((?!((Wikipedia:)|(File:))).)*(?<!(_\\(disambiguation\\)))");
         while (file.hasNextLine()){
             Document doc = (handleUrl(file.nextLine()));
             Elements linkElements = doc.select("a");
-            for (Element e:
-                    linkElements) {
+            int numLinks = 0;
+            int i = 0;
+            while (numLinks < 6 && i<linkElements.size()) {
+                Element e = linkElements.get(i);
+                i++;
                 String link = (e.attr("href"));
-                if(!link.contains("File:")){
                     Matcher m = urlPattern.matcher(link);
                     if(m.matches()){
+                        numLinks++;
                         String flink = BASE_URI + (e.attr("href"));
-                        //System.out.println(flink);
+                        handleUrl(flink);
                     }
-                }
-
-
             }
         }
     }
